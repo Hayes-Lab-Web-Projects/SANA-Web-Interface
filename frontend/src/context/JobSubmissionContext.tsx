@@ -285,8 +285,8 @@ export function JobSubmissionProvider({
     children: React.ReactNode;
 }) {
     const navigate = useNavigate();
-    const [options, setOptions] = useState<Options>(defaultOptions["SANA1"]);
-    const [sanaVersion, setSanaVersion] = useState<SanaVersion>("SANA1");
+    const [options, setOptions] = useState<Options>(defaultOptions["SANA2"]);
+    const [sanaVersion, setSanaVersion] = useState<SanaVersion>("SANA2");
     const [file1, setFile1] = useState<File | null>(null);
     const [file2, setFile2] = useState<File | null>(null);
     const [fileError, setFileError] = useState<string[] | null>([]);

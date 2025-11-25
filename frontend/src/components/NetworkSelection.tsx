@@ -64,7 +64,7 @@ const NetworkSelection = () => {
 
     return (
         <div className="content select-networks active visited">
-            <div id="network-selection-prompt" className="mt-4">
+            <div id="network-selection-prompt">
                 <p className="text-gray-800">
                     Please select two networks to align. Allowed file types are:
                 </p>

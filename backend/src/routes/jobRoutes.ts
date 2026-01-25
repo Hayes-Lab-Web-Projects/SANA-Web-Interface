@@ -74,14 +74,14 @@ router.post(
 router.post('/process', processController);
 router.get('/:id', getJobResults);
 // router.get('/api/jobs', lookupJobsController); <-- for admin page in future
-router.post(
-    '/submit-default-zip',
-    supabaseAuth,
-    zipUploadMiddleware,
-    extractZipMiddleware,
-    submitDefaultZipController,
-    cleanupZipMiddleware
-);
+// router.post(
+//     '/submit-default-zip',
+//     supabaseAuth,
+//     zipUploadMiddleware,
+//     extractZipMiddleware,
+//     submitDefaultZipController,
+//     cleanupZipMiddleware
+// );
 
 
 export default router;

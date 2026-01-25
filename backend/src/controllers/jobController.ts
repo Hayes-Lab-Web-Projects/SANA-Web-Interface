@@ -4,7 +4,7 @@ import { sanitize } from '../utils/sanitize';
 import HttpError from '../middlewares/HttpError';
 import { isSanaModelType, SANA_MODEL_NAMES, SanaModelType, SanaOptions } from '../config/modelOptions';
 import { createJob } from '../services/jobService';
-import { jobProcess } from '../services/processService';
+import { getJob, jobProcess } from '../services/processService';
 import getJobExecutionLog from '../utils/getJobExecutionLog';
 import {
     DownloadZipRequest,
@@ -18,7 +18,7 @@ import {
     UploadedFiles,
 } from '../../types/types';
 import path from 'path';
-import { tmpDir } from '../middlewares/upload';
+import { tmpDir, cleanupFiles } from '../middlewares/upload';
 import AdmZip from 'adm-zip';
 
 // /**
@@ -168,7 +168,6 @@ const submitJobController = async (req: SubmitJobRequest, res: Response, next: N
         req.body.options = sanitizedOptions;
 
         // 4. Create job with validated inputs
-        // const result = await createJob(req.files['files'], sanitizedOptions, sanaVersion);
         const uploadedFiles: UploadedFiles = {
             files: req.files['files'],
             similarityFiles:  req.files['similarityFiles'],
@@ -181,17 +180,18 @@ const submitJobController = async (req: SubmitJobRequest, res: Response, next: N
             message: 'Job submitted successfully',
             data: result,
         };
-        if (process.env.REDIRECT_AFTER_SUBMIT === 'true') {
-            const redirectResponse: UnifiedResponse = {
-                status: 'redirect',
-                message: 'Job submitted successfully. Redirecting...',
-                redirect: `/submit-job/${result.id}`,
-            };
-            res.status(302).json(redirectResponse);
-            return;
-        }
+        // if (process.env.REDIRECT_AFTER_SUBMIT === 'true') {
+        //     const redirectResponse: UnifiedResponse = {
+        //         status: 'redirect',
+        //         message: 'Job submitted successfully. Redirecting...',
+        //         redirect: `/submit-job/${result.id}`,
+        //     };
+        //     res.status(302).json(redirectResponse);
+        //     return;
+        // }
         res.status(201).json(response);
     } catch (err) {
+        // Clean up uploaded files on error
         next(err);
     }
 };
@@ -210,6 +210,7 @@ const processController = async (req: ProcessJobRequest, res: Response, next: Ne
 
         // Check if we need to include execution log
         let execLogFileOutput: string | undefined;
+        
         if (result.status === 'Networks are still being aligned.') {
             execLogFileOutput = getJobExecutionLog(jobId);
         }
@@ -260,110 +261,35 @@ const getJobResults = async (req: GetJobResultsRequest, res: Response, next: Nex
             throw new HttpError('Job ID is required.', { status: 400 });
         }
 
-        // const result = await getJob(jobId);
+        // Use getJob service which handles BullMQ and all job states
+        const protocol = req.protocol;
+        const host = req.get('host') || '';
+        const result = await getJob(jobId, protocol, host);
 
-        const jobDir = path.join(__dirname, '../process', jobId);
-
-        // Check if job directory exists
-        if (!fs.existsSync(jobDir) || !fs.lstatSync(jobDir).isDirectory()) {
-            throw new HttpError('Job not found.', { status: 404 });
-        }
-
-        // Check if info.json exists
-        const infoJsonPath = path.join(jobDir, 'info.json');
-        if (!fs.existsSync(infoJsonPath)) {
-            throw new HttpError('Job data not found. The job might not have been processed yet.', {
-                status: 500,
-            });
-        }
-
-        // Read job data
-        const infoJsonContent = fs.readFileSync(infoJsonPath, 'utf8');
-        const jobData = JSON.parse(infoJsonContent);
-
-        // Handle different job statuses
-        const status = jobData.status;
-
-        if (status === 'failed') {
-            // Read the run.log file for error details
-            const runLogPath = path.join(jobDir, 'run.log');
-            let runLogContent = '';
-
-            try {
-                if (fs.existsSync(runLogPath)) {
-                    runLogContent = fs.readFileSync(runLogPath, 'utf8');
-                    runLogContent = runLogContent
-                        .split('\n')
-                        .map((line) => `<span>${line.trim()}</span>`)
-                        .join('\n');
-                } else {
-                    runLogContent = 'Run log file not found';
-                }
-            } catch (err) {
-                console.error('Error reading run.log:', err);
-                runLogContent = 'Error reading run log file';
-            }
-
-            throw new HttpError('The alignment of the networks failed. See execution log below:', {
-                status: 400,
-                errorLog: runLogContent,
-            });
-        }
-
-        if (status === 'preprocessed' || status === 'processing') {
+        // Handle redirect responses
+        if (result.redirect) {
             const redirectResponse: UnifiedResponse = {
                 status: 'redirect',
-                message: 'Job is still being processed. Redirecting...',
-                redirect: `/submit-job/${jobId}`,
+                message: result.status,
+                redirect: result.redirect,
             };
             res.status(200).json(redirectResponse);
             return;
         }
 
-        if (status === 'processed') {
-            if (!jobData.zipName) {
-                throw new HttpError('Invalid job data: missing zip file name.', {
-                    status: 500,
-                });
-            }
+        // Handle successful results
+        const response: UnifiedResponse<ProcessedJobResponse> = {
+            status: 'success',
+            message: result.status,
+            data: {
+                jobId: result.jobId,
+                note: result.note || '',
+                zipDownloadUrl: result.zipDownloadUrl || '',
+                execLogFileOutput: result.execLogFileOutput || '',
+            },
+        };
 
-            // Get execution log
-            const execLogFilePath = path.join(jobDir, 'run.log');
-            let execLogFileOutput = '';
-
-            if (fs.existsSync(execLogFilePath)) {
-                try {
-                    const execLogFileContent = fs.readFileSync(execLogFilePath, 'utf8');
-                    const lines = execLogFileContent.split('\n');
-                    execLogFileOutput = lines.map((line) => `<span>${line.trim()}</span>`).join('');
-                } catch (err) {
-                    execLogFileOutput = 'Problem opening execution log file.';
-                }
-            } else {
-                execLogFileOutput = 'Job execution log file does not exist.';
-            }
-
-            // Construct base URL for download link
-            const baseUrl = `${req.protocol}://${req.get('host')}`;
-
-
-            const response: UnifiedResponse<ProcessedJobResponse> = {
-                status: 'success',
-                message: 'Job Results',
-                data: {
-                    jobId: jobId,
-                    note: `These results can be accessed on the results page using the Job ID ${jobId}, or directly accessed using ${baseUrl}/results?id=${jobId}.`,
-                    zipDownloadUrl: `${baseUrl}/api/download/${jobId}`,
-                    execLogFileOutput: execLogFileOutput,
-                },
-            };
-
-            res.status(200).json(response);
-            return;
-        } else {
-            // Unhandled status
-            throw new HttpError(`Unhandled job status: ${status}`, { status: 500 });
-        }
+        res.status(200).json(response);
     } catch (err) {
         next(err);
     }

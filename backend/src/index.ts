@@ -6,7 +6,7 @@ import ErrorHandler from './middlewares/ErrorHandler';
 import cors from 'cors';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import authRoutes from './routes/authRoutes';
+//import authRoutes from './routes/authRoutes';
 import jobRoutes from './routes/jobRoutes';
 import { authenticatedRateLimit, publicRateLimit } from './middlewares/rateLimiter';
 
@@ -41,7 +41,7 @@ app.use(cookieParser());
 
 // api routes
 // app.use('/api/auth', publicRateLimit, authRoutes);
-app.use('/api/auth', authRoutes);
+// app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 
 // error handling middleware after routes

@@ -103,22 +103,6 @@ const preprocess = async (
             }
         }
     }
-
-    // 6. Write job info to a JSON file
-    const statusFile: string = path.join(jobLocation, "info.json");
-    try {
-        fs.writeFileSync(
-            statusFile,
-            JSON.stringify({
-                status: "preprocessed",
-                data: jobData,
-                options: options,
-                version: jobData.modelVersion
-            })
-        );
-    } catch (error: any) {
-        throw new HttpError(`Error writing job info to JSON file`, {status: 500});
-    }
 };
 
 export {

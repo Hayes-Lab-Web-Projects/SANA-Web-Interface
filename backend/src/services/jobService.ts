@@ -5,6 +5,7 @@ import path from 'path';
 import { SanaModelType } from '../config/modelOptions';
 import HttpError from '../middlewares/HttpError';
 import { JobData, UploadedFiles } from '../../types/types';
+import { addJobToQueue } from '../config/queue';
 
 
 /**
@@ -60,7 +61,8 @@ const createJob = async (
         network2Name,
         attempts: 0,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        options: options,
     };
 
     if (process.env.NODE_ENV === 'development') {
@@ -71,22 +73,14 @@ const createJob = async (
         // Handle preprocessing
         await preprocess(files, options, jobData);
         console.log('Preprocessing completed successfully');
-
+        await addJobToQueue(jobId, jobData);
         // // Determine if we should redirect or return job data
         // if (process.env.REDIRECT_AFTER_SUBMIT === 'true') {
         //     return `/submit-job/${jobData.id}`;
         // }
         
-        // Otherwise return the job data
         return jobData;
     } catch (error: any) {
-        // // Update job status to error
-        // jobData.status = 'error';
-        // jobData.error = error.message;
-        // jobData.updatedAt = new Date();
-        
-        // // Save the error state if needed
-        // // await saveJobError(jobData);
         
         throw new HttpError(
             `Error during preprocessing: ${error.message}`,

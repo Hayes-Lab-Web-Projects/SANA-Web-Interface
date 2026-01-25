@@ -83,9 +83,13 @@ export type JobData = {
     attempts: number;
     result?: any;
     error?: string;
+    //outputs
+    execLogFileOutput?: string;
+    zipName?: string;
     // timestamps
     createdAt: Date;
     updatedAt: Date;
+    options: SanaOptions;
 };
 
 

@@ -6,7 +6,7 @@ import { SanaModelType } from '../config/modelOptions';
 import HttpError from '../middlewares/HttpError';
 import { JobData, UploadedFiles } from '../../types/types';
 import { addJobToQueue } from '../config/queue';
-
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Creates a new job with the provided files and options
@@ -40,9 +40,10 @@ const createJob = async (
 
     // Generate job ID
     const timestamp = Date.now();
-    const jobId = createHash('md5')
-        .update(`${timestamp}-${network1Name}-${network2Name}`)
-        .digest('hex');
+    const jobId = uuidv4();
+    // const jobId = createHash('md5')
+    //     .update(`${timestamp}-${network1Name}-${network2Name}`)
+    //     .digest('hex');
 
     // Get file extension and validate
     const extension = path.extname(files.files[0].originalname).toLowerCase();

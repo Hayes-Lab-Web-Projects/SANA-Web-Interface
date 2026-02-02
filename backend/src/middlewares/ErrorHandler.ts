@@ -2,8 +2,28 @@ import { Request, Response, NextFunction } from 'express';
 import { UnifiedResponse } from '../../types/types';
 import HttpError from './HttpError';
 import { ZodError } from 'zod';
+import fs from 'fs';
+
+/**
+ * Helper function to cleanup uploaded files on error
+ */
+const cleanupFiles = (reqFiles: Request['files'] | undefined): void => {
+    if (!reqFiles) return;
+
+    const allFiles = Object.values(reqFiles)
+        .flat()
+        .filter((file): file is Express.Multer.File => !!file && typeof file.path === 'string' && file.path.length > 0);
+
+    allFiles.forEach((file) => {
+        fs.unlink(file.path, (err) => {
+            if (err) console.error(`Error deleting file ${file.path}:`, err);
+        });
+    });
+};
 
 const ErrorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
+    // Cleanup uploaded files if they exist
+    cleanupFiles(req.files);
     if (err instanceof ZodError) {
         const httpError = HttpError.validation(err);
 

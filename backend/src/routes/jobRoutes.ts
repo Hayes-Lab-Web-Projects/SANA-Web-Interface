@@ -45,7 +45,6 @@ import { Router, Request, Response, NextFunction } from 'express';
 import {
     uploadMiddleware,
     validateAllFilesMiddleware,
-    cleanupFilesErrorHandler,
     zipUploadMiddleware,
     extractZipMiddleware,
     cleanupZipMiddleware,
@@ -57,7 +56,7 @@ import {
     processController,
     submitDefaultZipController,
 } from '../controllers/jobController';
-import apiKeyMiddleware from '../middlewares/apiKeyMiddleware';
+// import apiKeyMiddleware from '../middlewares/apiKeyMiddleware'; // Deactivated for now
 import { supabaseAuth } from '../middlewares/supabase';
 
 const router: Router = Router();
@@ -69,7 +68,6 @@ router.post(
     uploadMiddleware,
     validateAllFilesMiddleware,
     submitJobController,
-    cleanupFilesErrorHandler,
 );
 router.post('/process', processController);
 router.get('/:id', getJobResults);

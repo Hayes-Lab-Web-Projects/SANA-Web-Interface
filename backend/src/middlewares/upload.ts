@@ -224,77 +224,54 @@ const validateSimilarityFile = async (file: MulterFile): Promise<boolean> => {
 //     next();
 // };
 
-const validateFilesMiddleware = (req: Request): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (!req.files || !req.files['files'] || req.files['files'].length < 2) {
+const validateFilesMiddleware = (req: Request): void => {
+    if (!req.files || !req.files['files'] || req.files['files'].length < 2) {
+        throw new HttpError('Two files must be uploaded.', { status: 400});
+    }
 
-            reject(new HttpError('Two files must be uploaded.', { status: 400}));
-            return;
-        }
+    const file1Ext = path.extname(req.files['files'][0].originalname).toLowerCase().slice(1);
+    const file2Ext = path.extname(req.files['files'][1].originalname).toLowerCase().slice(1);
 
-        const file1Ext = path.extname(req.files['files'][0].originalname).toLowerCase().slice(1);
-        const file2Ext = path.extname(req.files['files'][1].originalname).toLowerCase().slice(1);
-
-        if (file1Ext !== file2Ext) {
-            reject(new HttpError('Files must have the same extension.', { status: 400}));
-            return;
-        }
-        resolve();
-    });
+    if (file1Ext !== file2Ext) {
+        throw new HttpError('Files must have the same extension.', { status: 400});
+    }
 };
 
-const validateSimilarityFileMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<void> => {
-    try {
-        const similarityFiles = req.files?.['similarityFiles'];
-        if (similarityFiles) {
-            // Parse and validate esim weights from request body
-            // let options: SANA2Options;
-            let options: Sana2Options;
-            let esimWeights: number[] | undefined;
-            try {
-                options = JSON.parse(req.body.options);
-                const validatedOptions = sana2OptionsSchema.parse(options);
-                esimWeights = validatedOptions.advanced?.esim;
-            } catch (error) {
-                throw new HttpError('Invalid sana2 options format.', { status: 400});
-            }
-
-            // Check if number of weights matches number of similarity files
-            if (esimWeights?.length !== similarityFiles.length) {
-                throw new HttpError('Number of esim weights must match number of similarity files.', { status: 400});
-            }
-
-            const validationPromises = similarityFiles.map(validateSimilarityFile);
-            const validationResults = await Promise.all(validationPromises);
-
-            if (validationResults.some((result) => !result)) {
-                throw new HttpError(
-                    'One or more similarity files are invalid. Files must contain three columns: node1 node2 similarity(0-1)',
-                    { status: 400},
-                );
-            }
+const validateSimilarityFileMiddleware = async (req: Request): Promise<void> => {
+    const similarityFiles = req.files?.['similarityFiles'];
+    if (similarityFiles) {
+        // Parse and validate esim weights from request body
+        let options: Sana2Options;
+        let esimWeights: number[] | undefined;
+        try {
+            options = JSON.parse(req.body.options);
+            const validatedOptions = sana2OptionsSchema.parse(options);
+            esimWeights = validatedOptions.advanced?.esim;
+        } catch (error) {
+            throw new HttpError('Invalid sana2 options format.', { status: 400});
         }
 
-        next();
-    } catch (error) {
-        const allFiles = [...(req.files?.['files'] || []), ...(req.files?.['similarityFiles'] || [])];
-        allFiles.forEach((file) => {
-            fs.unlink(file.path, (err) => {
-                if (err) console.error(`Error deleting file ${file.path}:`, err);
-            });
-        });
-        next(error);
+        // Check if number of weights matches number of similarity files
+        if (esimWeights?.length !== similarityFiles.length) {
+            throw new HttpError('Number of esim weights must match number of similarity files.', { status: 400});
+        }
+
+        const validationPromises = similarityFiles.map(validateSimilarityFile);
+        const validationResults = await Promise.all(validationPromises);
+
+        if (validationResults.some((result) => !result)) {
+            throw new HttpError(
+                'One or more similarity files are invalid. Files must contain three columns: node1 node2 similarity(0-1)',
+                { status: 400},
+            );
+        }
     }
 };
 
 const validateAllFilesMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        await validateFilesMiddleware(req);
-        await validateSimilarityFileMiddleware(req, res, next);
+        validateFilesMiddleware(req);
+        await validateSimilarityFileMiddleware(req);
         next();
     } catch (error) {
         cleanupFiles(req.files);

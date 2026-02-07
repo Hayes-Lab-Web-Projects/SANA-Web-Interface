@@ -190,9 +190,11 @@ const submitJobController = async (req: SubmitJobRequest, res: Response, next: N
         //     return;
         // }
         res.status(201).json(response);
+        return;
     } catch (err) {
         // Clean up uploaded files on error
         next(err);
+        return;
     }
 };
 

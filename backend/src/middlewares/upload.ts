@@ -224,20 +224,28 @@ const validateSimilarityFile = async (file: MulterFile): Promise<boolean> => {
 //     next();
 // };
 
-const validateFilesMiddleware = (req: Request): void => {
-    if (!req.files || !req.files['files'] || req.files['files'].length < 2) {
-        throw new HttpError('Two files must be uploaded.', { status: 400});
-    }
+const validateFilesMiddleware = (req: Request): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        if (!req.files || !req.files['files'] || req.files['files'].length < 2) {
 
-    const file1Ext = path.extname(req.files['files'][0].originalname).toLowerCase().slice(1);
-    const file2Ext = path.extname(req.files['files'][1].originalname).toLowerCase().slice(1);
+            reject(new HttpError('Two files must be uploaded.', { status: 400}));
+            return;
+        }
 
-    if (file1Ext !== file2Ext) {
-        throw new HttpError('Files must have the same extension.', { status: 400});
-    }
+        const file1Ext = path.extname(req.files['files'][0].originalname).toLowerCase().slice(1);
+        const file2Ext = path.extname(req.files['files'][1].originalname).toLowerCase().slice(1);
+
+        if (file1Ext !== file2Ext) {
+            reject(new HttpError('Files must have the same extension.', { status: 400}));
+            return;
+        }
+        resolve();
+    });
 };
 
-const validateSimilarityFileMiddleware = async (req: Request): Promise<void> => {
+const validateSimilarityFileMiddleware = async (
+    req: Request,
+): Promise<void> => {
     const similarityFiles = req.files?.['similarityFiles'];
     if (similarityFiles) {
         // Parse and validate esim weights from request body
@@ -270,7 +278,7 @@ const validateSimilarityFileMiddleware = async (req: Request): Promise<void> => 
 
 const validateAllFilesMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        validateFilesMiddleware(req);
+        await validateFilesMiddleware(req);
         await validateSimilarityFileMiddleware(req);
         next();
     } catch (error) {
@@ -291,19 +299,6 @@ const cleanupFiles = (reqFiles: Request['files'] | undefined): void => {
             if (err) console.error(`Error deleting file ${file.path}:`, err);
         });
     });
-};
-
-const cleanupFilesErrorHandler = async (
-    err: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<void> => {
-    console.log('am i here?'); // TESTING
-
-    cleanupFiles(req.files);
-    console.error('Job processing error:', err);
-    next(new HttpError(err.message || 'An error occurred during job processing', {status:500}));
 };
 
 // Configure multer upload
@@ -443,7 +438,6 @@ export {
     uploadMiddleware,
     validateAllFilesMiddleware,
     cleanupFiles,
-    cleanupFilesErrorHandler,
     zipUploadMiddleware,
     extractZipMiddleware,
     cleanupZipMiddleware,

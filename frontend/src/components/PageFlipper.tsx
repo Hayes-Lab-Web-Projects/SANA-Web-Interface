@@ -18,6 +18,7 @@ const PageFlipper = ({
             <Button
                 onClick={handlePrevious}
                 className="bg-red-600 hover:bg-red-800"
+                ariaLabel="Go to previous step"
             >
                 <span>&larr; Previous</span>
             </Button>
@@ -29,6 +30,7 @@ const PageFlipper = ({
                     !handlePrevious ? "ml-auto" : ""
                 }`}
                 disabled={disabled}
+                ariaLabel={disabled ? "Cannot proceed to next step" : `Go to next step: ${nextText}`}
             >
                 <span>{nextText} &rarr;</span>
             </Button>

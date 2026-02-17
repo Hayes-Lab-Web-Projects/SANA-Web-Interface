@@ -202,12 +202,15 @@ const AlignmentOptions = ({ fixed = false }: { fixed?: boolean }) => {
                             {optionFields[key]?.label || key}
                         </label>
                         <input
+                            id={key}
                             name={key}
                             type="number"
                             value={tempValues[key as keyof typeof tempValues] === undefined ? 
                                   "" : tempValues[key as keyof typeof tempValues]}
                             onChange={(e) => handleInputChange(key, e.target.value)}
                             onBlur={() => handleBlur(key)}
+                            aria-label={optionFields[key]?.title || optionFields[key]?.label || key}
+                            aria-describedby={optionFields[key]?.title ? `${key}-desc` : undefined}
                             style={{
                                 width: "100px",
                                 marginBlock: "auto",
@@ -215,6 +218,11 @@ const AlignmentOptions = ({ fixed = false }: { fixed?: boolean }) => {
                             }}
                             disabled={fixed}
                         />
+                        {optionFields[key]?.title && (
+                            <span id={`${key}-desc`} className="sr-only">
+                                {optionFields[key]?.title}
+                            </span>
+                        )}
                     </div>
                 ))}
                 </div>

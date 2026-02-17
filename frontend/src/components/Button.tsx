@@ -5,6 +5,7 @@ interface ButtonProps {
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
+  ariaLabel?: string;
 }
 /**
  * Reusable button component, same color as the primary color specified in tailwind.config.js.
@@ -24,13 +25,15 @@ function Button({
   onClick, 
   children, 
   className, 
-  disabled = false 
+  disabled = false,
+  ariaLabel,
 }: ButtonProps) {
   return (
     <button
       type={type}
       onClick = {onClick}
       disabled = {disabled}
+      aria-label={ariaLabel}
       className={`inline-block bg-primary hover:bg-secondary px-8 py-4 cursor-pointer rounded-md text-center text-white text-lg transition duration-300 ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${className}`}
     >
       {children}

@@ -102,89 +102,104 @@ const RegisterForm = () => {
                 )}
 
                 {/* Form Fields */}
-                <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+                <form onSubmit={handleSubmit(onSubmit)} className="w-full" aria-labelledby="register-heading">
                     <div className="w-full">
-                        <label className="text-sm font-medium text-gray-700">First name</label>
+                        <label htmlFor="first_name" className="text-sm font-medium text-gray-700">First name</label>
                         <input 
                             type="text"
+                            id="first_name"
                             className={`w-full px-4 py-2 mt-2 border ${
                                 errors.first_name
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-gray-300 focus:ring-blue-400"
                             } rounded-lg focus:outline-none focus:ring-2`}
                             placeholder="Enter your first name"
+                            aria-invalid={errors.first_name ? "true" : "false"}
+                            aria-describedby={errors.first_name ? "first_name-error" : undefined}
                             {...register("first_name")}
                         />
                         {errors.first_name && (
-                            <p className="mt-1 text-sm text-red-600">{errors.first_name.message}</p>
+                            <p id="first_name-error" className="mt-1 text-sm text-red-600">{errors.first_name.message}</p>
                         )}
                     </div>
 
                     <div className="w-full mt-3">
-                        <label className="text-sm font-medium text-gray-700">Last name</label>
+                        <label htmlFor="last_name" className="text-sm font-medium text-gray-700">Last name</label>
                         <input 
                             type="text"
+                            id="last_name"
                             className={`w-full px-4 py-2 mt-2 border ${
                                 errors.last_name
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-gray-300 focus:ring-blue-400"
                             } rounded-lg focus:outline-none focus:ring-2`}
                             placeholder="Enter your last name"
+                            aria-invalid={errors.last_name ? "true" : "false"}
+                            aria-describedby={errors.last_name ? "last_name-error" : undefined}
                             {...register("last_name")}
                         />
                         {errors.last_name && (
-                            <p className="mt-1 text-sm text-red-600">{errors.last_name.message}</p>
+                            <p id="last_name-error" className="mt-1 text-sm text-red-600">{errors.last_name.message}</p>
                         )}
                     </div>
 
                     <div className="w-full mt-3">
-                        <label className="text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="text-sm font-medium text-gray-700">Email</label>
                         <input 
                             type="email"
+                            id="email"
                             className={`w-full px-4 py-2 mt-2 border ${
                                 errors.email
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-gray-300 focus:ring-blue-400"
                             } rounded-lg focus:outline-none focus:ring-2`}
                             placeholder="Enter your email"
+                            aria-invalid={errors.email ? "true" : "false"}
+                            aria-describedby={errors.email ? "email-error" : undefined}
                             {...register("email")}
                         />
                         {errors.email && (
-                            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                            <p id="email-error" className="mt-1 text-sm text-red-600">{errors.email.message}</p>
                         )}
                     </div>
 
                     <div className="w-full mt-3">
-                        <label className="text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="text-sm font-medium text-gray-700">Password</label>
                         <input 
                             type="password"
+                            id="password"
                             className={`w-full px-4 py-2 mt-2 border ${
                                 errors.password
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-gray-300 focus:ring-blue-400"
                             } rounded-lg focus:outline-none focus:ring-2`}
                             placeholder="Enter your password"
+                            aria-invalid={errors.password ? "true" : "false"}
+                            aria-describedby={errors.password ? "password-error" : undefined}
                             {...register("password")}
                         />
                         {errors.password && (
-                            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                            <p id="password-error" className="mt-1 text-sm text-red-600">{errors.password.message}</p>
                         )}
                     </div>
 
                     <div className="w-full mt-3">
-                        <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+                        <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">Confirm Password</label>
                         <input 
                             type="password"
+                            id="confirmPassword"
                             className={`w-full px-4 py-2 mt-2 border ${
                                 errors.confirmPassword
                                 ? "border-red-500 focus:ring-red-400"
                                 : "border-gray-300 focus:ring-blue-400"
                             } rounded-lg focus:outline-none focus:ring-2`}
                             placeholder="Re-enter your password"
+                            aria-invalid={errors.confirmPassword ? "true" : "false"}
+                            aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
                             {...register("confirmPassword")}
                         />
                         {errors.confirmPassword && (
-                            <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+                            <p id="confirmPassword-error" className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
                         )}
                     </div>
 

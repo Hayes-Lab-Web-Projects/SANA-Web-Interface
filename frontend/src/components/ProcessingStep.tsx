@@ -4,7 +4,7 @@ const ProcessingStep = () => {
     return (
         <div className="content process">
             <div id="processing-animation-container">
-                <span>Preprocessing Networks...</span>
+                <span aria-live="polite" role="status">Preprocessing Networks...</span>
             </div>
             <Note>
                 <div>

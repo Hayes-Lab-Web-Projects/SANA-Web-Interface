@@ -198,6 +198,7 @@ const SubmitJob = () => {
                                     method="POST"
                                     encType="multipart/form-data"
                                     action="."
+                                    aria-label="SANA job submission form"
                                 >
                                     <div className="mb-4">
                                         {activeStep ===

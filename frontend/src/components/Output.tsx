@@ -135,6 +135,11 @@ const Output = ({ jobId, isFinished }: OutputProps) => {
             </h1>
             <hr />
             <h2 className="mt-2 mx-auto md:mx-0">Job ID: {jobId}</h2>
+            {!isFinished && (
+                <div aria-live="polite" aria-atomic="true" className="sr-only">
+                    Processing job {jobId}. Please wait...
+                </div>
+            )}
 
             {error ? (
                 <div>
@@ -143,13 +148,13 @@ const Output = ({ jobId, isFinished }: OutputProps) => {
                             These process can maybe be accessed on the direct{" "}
                             <Link
                                 to={processUrl + `/${jobId}`}
-                                className="text-blue-600 hover:text-blue-900 hover:underline"
+                                className="text-blue-600 hover:text-blue-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                             >
                                 submit-job processing page
                             </Link>
                         </p>
                     </Note>
-                    <h2 className="text-lg mt-2 font-bold">{error.message}</h2>
+                    <h2 className="text-lg mt-2 font-bold" role="alert">{error.message}</h2>
                     <div>
                         {" "}
                         {error.errorLog && (
@@ -166,14 +171,14 @@ const Output = ({ jobId, isFinished }: OutputProps) => {
                             These results can be accessed on{" "}
                             <Link
                                 to={resultUrl}
-                                className="text-blue-600 hover:text-blue-900 hover:underline"
+                                className="text-blue-600 hover:text-blue-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                             >
                                 the job lookup page
                             </Link>{" "}
                             using the above Job ID, or directly accessed using{" "}
                             <Link
                                 to={resultUrl + `/${jobId}`}
-                                className="text-blue-600 hover:text-blue-900 hover:underline"
+                                className="text-blue-600 hover:text-blue-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                             >
                                 this link
                             </Link>
@@ -187,6 +192,7 @@ const Output = ({ jobId, isFinished }: OutputProps) => {
                             <Button
                                 className="w-fit mt-4 mx-auto md:mx-0"
                                 onClick={downloadZipFile}
+                                ariaLabel="Download job results as a zip file"
                             >
                                 Download Results As .zip
                             </Button>

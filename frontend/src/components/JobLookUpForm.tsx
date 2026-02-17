@@ -102,22 +102,28 @@ function JobLookUpForm() {
     <div className={`${containerClasses}`}>
       <h2 className={`${headingTwoClasses}`}>Job Lookup</h2>
       <div className="space-y-4">
-        <label className={`${labelClasses}`}>Job ID To Search For:</label>
+        <label htmlFor="job-id" className={`${labelClasses}`}>Job ID To Search For:</label>
         <input
           type="text"
+          id="job-id"
           placeholder="Previous Job ID"
           value={jobID}
           onChange={(e) => setJobID(e.target.value)}
           className={`${inputClasses}`}
         />
         <button
+          type="button"
           onClick={submit}
           className={`${buttonClasses}`}
           disabled={loading}
         >
           {loading ? "Loading..." : "Submit"}
         </button>
-        {error && <p className="text-red-500">{error.message}</p>}
+        {error && (
+          <p className="text-red-500" role="alert">
+            {error.message}
+          </p>
+        )}
         {renderJobDetails()}
       </div>
     </div>

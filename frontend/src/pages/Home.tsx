@@ -9,7 +9,7 @@ const Home = () => {
             </h1>
             <img
                 src="network-alignment.gif"
-                alt="network alignment gif"
+                alt="Animated visualization showing network alignment process"
                 width="800px"
                 className="mx-auto"
             />
@@ -39,14 +39,14 @@ const Home = () => {
                     corresponds to the version from our first paper, which you
                     can read at{" "}
                     <Link
-                        className="underline hover:text-hover-link text-primary transition"
+                        className="underline hover:text-hover-link text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         to="https://doi.org/10.1093/bioinformatics/btx090"
                     >
                         BioInformatics
                     </Link>
                     , or as a{" "}
                     <Link
-                        className="underline hover:text-hover-link text-primary transition"
+                        className="underline hover:text-hover-link text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         to="https://arxiv.org/abs/1607.02642"
                     >
                         preprint
@@ -57,7 +57,7 @@ const Home = () => {
                 <p>
                     The most recent version of SANA is always available on{" "}
                     <Link
-                        className="underline hover:text-hover-link text-primary transition"
+                        className="underline hover:text-hover-link text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         to="https://github.com/waynebhayes/SANA"
                     >
                         GitHub
@@ -67,7 +67,7 @@ const Home = () => {
                 <p>
                     The full IID networks used in the paper are available{" "}
                     <Link
-                        className="underline hover:text-hover-link text-primary transition"
+                        className="underline hover:text-hover-link text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         to="SANA+IID.tar.gz"
                     >
                         here
@@ -82,7 +82,7 @@ const Home = () => {
                 width="400px"
                 className="mx-auto"
                 src="xkcd-machine-learning.png"
-                alt="Network alignment cartoon"
+                alt="Cartoon illustration about network alignment and machine learning"
             />
         </div>
     );

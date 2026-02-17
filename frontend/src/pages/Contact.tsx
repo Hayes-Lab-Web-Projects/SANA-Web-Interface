@@ -72,11 +72,14 @@ const Contact = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className={`${containerClasses}`}
                 noValidate
+                aria-labelledby="contact-heading"
             >
-                <h2 className={`${headingTwoClasses}`}>Contact Us</h2>
+                <h2 id="contact-heading" className={`${headingTwoClasses}`}>Contact Us</h2>
 
                 {submitStatus.type && (
                     <div
+                        role="alert"
+                        aria-live={submitStatus.type === "error" ? "assertive" : "polite"}
                         className={`p-3 rounded-md mb-4 ${
                             submitStatus.type === "success"
                                 ? "bg-green-100 text-green-800"
@@ -100,10 +103,12 @@ const Contact = () => {
                                 ? "border-red-500 focus:border-red-500"
                                 : ""
                         }`}
+                        aria-invalid={errors.name ? "true" : "false"}
+                        aria-describedby={errors.name ? "name-error" : undefined}
                         {...register("name")}
                     />
                     {errors.name && (
-                        <p className="mt-1 text-red-500 text-sm">
+                        <p id="name-error" className="mt-1 text-red-500 text-sm">
                             {errors.name.message}
                         </p>
                     )}
@@ -122,10 +127,12 @@ const Contact = () => {
                                 ? "border-red-500 focus:border-red-500"
                                 : ""
                         }`}
+                        aria-invalid={errors.email ? "true" : "false"}
+                        aria-describedby={errors.email ? "email-error" : undefined}
                         {...register("email")}
                     />
                     {errors.email && (
-                        <p className="mt-1 text-red-500 text-sm">
+                        <p id="email-error" className="mt-1 text-red-500 text-sm">
                             {errors.email.message}
                         </p>
                     )}
@@ -156,10 +163,12 @@ const Contact = () => {
                                 ? "border-red-500 focus:border-red-500"
                                 : ""
                         }`}
+                        aria-invalid={errors.message ? "true" : "false"}
+                        aria-describedby={errors.message ? "message-error" : undefined}
                         {...register("message")}
                     />
                     {errors.message && (
-                        <p className="mt-1 text-red-500 text-sm">
+                        <p id="message-error" className="mt-1 text-red-500 text-sm">
                             {errors.message.message}
                         </p>
                     )}

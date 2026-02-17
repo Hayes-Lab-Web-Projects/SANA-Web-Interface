@@ -22,7 +22,7 @@ function Footer() {
                             {/* Email Icon */}
                             <Link
                                 to="mailto:whayes@uci.edu"
-                                className="hover:text-hover-link transition"
+                                className="hover:text-hover-link transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
                                 aria-label="Email Wayne B. Hayes"
                             >
                                 <FaEnvelope size={24} />
@@ -33,7 +33,7 @@ function Footer() {
                         <div className="flex items-center py-2 space-x-2">
                             <Link
                                 to="https://github.com/waynebhayes/SANA"
-                                className="inline-flex items-center hover:text-hover-link transition"
+                                className="inline-flex items-center hover:text-hover-link transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
                                 aria-label="GitHub Repository"
                             >
                                 <FaGithub size={24} />
@@ -50,7 +50,12 @@ function Footer() {
                                 {formattedDate}
                             </span>
                         </p>
-                        <Link to = "/login">Log In</Link> {/* from merged conflict */ }
+                        <Link 
+                            to="/login"
+                            className="hover:text-hover-link transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+                        >
+                            Log In
+                        </Link> {/* from merged conflict */ }
                     </div>
                 </div>
 

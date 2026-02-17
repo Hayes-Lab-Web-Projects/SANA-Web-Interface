@@ -4,6 +4,7 @@ const StepNavigation = ({ activeStep }: { activeStep: StepType }) => {
     // set bg-gray-50 to current title
 
     return (
+        <nav aria-label="Job submission steps">
         <div id="steps-container" className="bg-gray-300 mt-4 w-full mx-auto">
             <ul id="steps" className="text-center text-[#778899]">
                 {(Object.keys(Steps) as Array<keyof typeof Steps>).map((stepKey) => {
@@ -17,6 +18,7 @@ const StepNavigation = ({ activeStep }: { activeStep: StepType }) => {
                                 ? "bg-gray-200 relative"
                                 : ""
                             }`}
+                            aria-current={activeStep === step ? "step" : undefined}
                         >
                             {activeStep === step && (
                               <span className="absolute left-2 my-auto">{'>'}</span>
@@ -33,6 +35,7 @@ const StepNavigation = ({ activeStep }: { activeStep: StepType }) => {
                 })}
             </ul>
         </div>
+        </nav>
     );
 };
 

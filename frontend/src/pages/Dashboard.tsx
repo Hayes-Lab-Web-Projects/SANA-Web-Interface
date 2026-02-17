@@ -167,8 +167,9 @@ function Dashboard() {
             <h3 className="text-lg font-semibold">Submit another Job?</h3>
             <p className="text-sm text-gray-700">Note: zip file required</p>
             <button 
-              className="mt-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer"
+              className="mt-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-600"
               onClick={() => navigate("/submit-zip")}
+              aria-label="Submit a new job using a zip file"
             >
               Submit Job
             </button>
@@ -190,29 +191,32 @@ function Dashboard() {
               {apiKey && displayKey ? (
                 <>
                 <div className="relative bg-gray-100 p-2 rounded break-all text-sm font-mono">
-                  <div className="p-5"> 
+                  <div className="p-5" aria-label="Your API key"> 
                     {apiKey}
                   </div>
                   <button 
                     onClick={() => copyToClipboard(apiKey)}
-                    className="absolute top-1 right-1 bg-blue-500 hover:bg-blue-600 text-white px-1 py-1 rounded text-[0.60rem] min-w-[30px]"
+                    className="absolute top-1 right-1 bg-blue-500 hover:bg-blue-600 text-white px-1 py-1 rounded text-[0.60rem] min-w-[30px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-blue-600"
+                    aria-label="Copy API key to clipboard"
                   >
                     {copyFeedback || 'Copy'}
                   </button>
                 </div>
                 <button 
-                    className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer"
+                    className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-yellow-600"
                     onClick={handleShowApiKey}
                     disabled={isLoading}
+                    aria-label={isLoading ? 'Loading API key' : 'Hide API key'}
                   >
                     {isLoading ? 'Loading...' : 'Hide API Key'}
                   </button>
                 </>
               ) : (
                 <button 
-                  className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer"
+                  className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg w-full transition duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-yellow-600"
                   onClick={handleShowApiKey}
                   disabled={isLoading}
+                  aria-label={isLoading ? 'Loading API key' : 'Show API key'}
                 >
                   {isLoading ? 'Loading...' : 'Show API Key'}
                 </button>
@@ -225,7 +229,8 @@ function Dashboard() {
       <div className="mt-6 text-center">
         <button
           onClick={logout}
-          className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300 cursor-pointer"
+          className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-600"
+          aria-label="Log out of your account"
         >
           Log out
         </button>

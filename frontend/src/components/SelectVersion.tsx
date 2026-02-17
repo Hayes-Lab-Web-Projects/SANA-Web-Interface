@@ -15,11 +15,15 @@ const SelectVersion = ({ sanaVersion, handleVersionChange }: SelectVersionProps)
             </div>
         </div>
         <div className="mt-4">
+            <label htmlFor="sanaVersion" className="block mb-2 text-gray-800">
+                Select SANA version:
+            </label>
             <select
                 id="sanaVersion"
                 value={sanaVersion}
                 onChange={handleVersionChange}
                 className="p-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                aria-label="Choose SANA version"
             >
                 <option value="SANA2">SANA 2.0</option>
                 <option value="SANA1_1">SANA 1.1</option>

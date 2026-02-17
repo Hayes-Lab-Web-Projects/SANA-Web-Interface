@@ -23,28 +23,38 @@ const SimliarityFileRow = ({
     };
 
     return (
-        <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-4 md:mb-0">
-                <p>External simliarity file: {i + 1}</p>
-                <div className="w-full md:w-1/3">
+            <div className="flex flex-col md:flex-row items-center">
+                <div className="md:w-1/2 mb-4 md:mb-0">
+                    <label htmlFor={`similarity-weight-${i}`} className="block">
+                        External similarity file {i + 1} weight:
+                    </label>
+                    <div className="w-full md:w-1/3">
+                        <input
+                            id={`similarity-weight-${i}`}
+                            className={inputClasses}
+                            onChange={handleWeightChange}
+                            type="number"
+                            value={rowWeight}
+                            aria-label={`Weight for external similarity file ${i + 1}`}
+                        ></input>
+                    </div>
+                </div>
+                <div className="w-60 md:w-1/2">
+                    <label htmlFor={`similarity-file-${i}`} className="sr-only">
+                        External similarity file {i + 1}
+                    </label>
                     <input
-                        className={inputClasses}
-                        onChange={handleWeightChange}
-                        type="number"
-                        value={rowWeight}
+                        type="file"
+                        id={`similarity-file-${i}`}
+                        className="file-input border rounded-md shadow-sm p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        name={`optional-files-${i + 1}}`}
+                        accept=".gw,.el"
+                        aria-describedby={`similarity-file-${i}-desc`}
+                        onChange={(e) => handleRowFileChange(e, i)}
                     ></input>
+                    <span id={`similarity-file-${i}-desc`} className="sr-only">External similarity file {i + 1} (3-column format)</span>
                 </div>
             </div>
-            <div className="w-60 md:w-1/2">
-                <input
-                    type="file"
-                    id={`Optional File Input ${i + 1}`}
-                    className="file-input border rounded-md shadow-sm p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    name={`optional-files-${i + 1}}`}
-                    onChange={(e) => handleRowFileChange(e, i)}
-                ></input>
-            </div>
-        </div>
     );
 };
 
@@ -133,14 +143,14 @@ const NetworkSelection = () => {
             <div id="network-file-input-wrapper" className="mt-6 space-y-6">
                 <div className="flex flex-col md:flex-row items-center">
                     <div className="md:w-1/2 mb-4 md:mb-0">
-                        <span className="text-gray-800">
+                        <label htmlFor="network-file-1-input" className="text-gray-800">
                             If you aren't aligning a network to itself, select
                             the{" "}
                             <strong>
                                 <em>smaller</em>
                             </strong>{" "}
                             network (in terms of node count).
-                        </span>
+                        </label>
                     </div>
                     <div className="md:w-1/2">
                         <input
@@ -148,22 +158,25 @@ const NetworkSelection = () => {
                             id="network-file-1-input"
                             className="file-input border rounded-md shadow-sm p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                             name="network-files[]"
+                            accept=".gw,.el"
+                            aria-describedby="network-file-1-desc"
                             onChange={(e) =>
                                 handleFileInputChange(e, "network-file1")
                             }
                         ></input>
+                        <span id="network-file-1-desc" className="sr-only">First network file (.gw or .el format)</span>
                     </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-center">
                     <div className="md:w-1/2 mb-4 md:mb-0">
-                        <span className="text-gray-800">
+                        <label htmlFor="network-file-2-input" className="text-gray-800">
                             If you aren't aligning a network to itself, select
                             the{" "}
                             <strong>
                                 <em>larger</em>
                             </strong>{" "}
                             network (in terms of node count).
-                        </span>
+                        </label>
                     </div>
                     <div className="md:w-1/2">
                         <input
@@ -171,10 +184,13 @@ const NetworkSelection = () => {
                             id="network-file-2-input"
                             className="file-input border rounded-md shadow-sm p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                             name="network-files[]"
+                            accept=".gw,.el"
+                            aria-describedby="network-file-2-desc"
                             onChange={(e) =>
                                 handleFileInputChange(e, "network-file2")
                             }
                         ></input>
+                        <span id="network-file-2-desc" className="sr-only">Second network file (.gw or .el format)</span>
                     </div>
                 </div>
                 <div className="text-sm md:w-1/2">
@@ -200,11 +216,15 @@ const NetworkSelection = () => {
                                 </li>
                             </ul>
                             <div className="mt-4">
+                                <label htmlFor="similarity-files" className="block mb-2 text-gray-800">
+                                    Number of external similarity files:
+                                </label>
                                 <select
                                     id="similarity-files"
                                     // value={optionalFilesCount}
                                     onChange={handleOptionalFilesCountChange}
                                     className="p-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                                    aria-label="Select number of external similarity files"
                                 >
                                     <option value="0">0</option>
                                     <option value="1">1</option>

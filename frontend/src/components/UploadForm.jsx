@@ -38,22 +38,30 @@ function UploadForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-label="SANA job upload form">
             {/* Render input fields for options */}
-            <input
-                type="number"
-                name="t"
-                onChange={handleOptionsChange}
-                placeholder="Running time (1-20)"
-            />
+            <div>
+                <label htmlFor="running-time">Running time (1-20 minutes)</label>
+                <input
+                    type="number"
+                    id="running-time"
+                    name="t"
+                    onChange={handleOptionsChange}
+                    placeholder="Running time (1-20)"
+                />
+            </div>
             {/* ...other options inputs */}
-            <input
-                type="file"
-                name="network-files"
-                onChange={handleFilesChange}
-                multiple
-                accept=".gw,.el"
-            />
+            <div>
+                <label htmlFor="network-files">Network files (two .gw or .el files)</label>
+                <input
+                    type="file"
+                    id="network-files"
+                    name="network-files"
+                    onChange={handleFilesChange}
+                    multiple
+                    accept=".gw,.el"
+                />
+            </div>
             <button type="submit">Submit</button>
         </form>
     );

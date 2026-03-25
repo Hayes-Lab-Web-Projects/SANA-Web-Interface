@@ -1,7 +1,7 @@
 #! /bin/bash
+# should be placed in the root directory of the project
 
-directory="$HOME/app/frontend"
-cd $directory
+cd frontend
 echo "Building static production files..."
 npm run build
 echo "Copying build files into /var/www/SANA_Website/..."

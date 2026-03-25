@@ -6,16 +6,16 @@ import tailwindcss from '@tailwindcss/vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/',
+  base: '/sana/',
   server: {
     host: '0.0.0.0',
     port: 5173,
-    strictPort: true,
-    origin: 'http://hayeslab.ics.uci.edu',
-    hmr: {
-      protocol: 'ws',
-      host: 'hayeslab.ics.uci.edu',
-      port: 5173
-    }
+    // strictPort: true,
+    // origin: 'http://hayeslab.ics.uci.edu',
+    // hmr: {
+    //   protocol: 'ws',
+    //   host: 'hayeslab.ics.uci.edu',
+    //   port: 5173
+    // }
   }
 });

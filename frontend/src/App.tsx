@@ -20,7 +20,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/sana">
     <AuthProvider>
       <div className="min-h-screen flex flex-col items-center justify-center *:w-full">
       <Header />

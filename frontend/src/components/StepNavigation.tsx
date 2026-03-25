@@ -14,8 +14,8 @@ const StepNavigation = ({ activeStep }: { activeStep: StepType }) => {
                             className={`step p-2 ${step} ${
                                 // activeStep === step ? "bg-gray-50 " : ""
                                 activeStep === step
-                                ? "bg-gray-200 relative"
-                                : ""
+                                ? "bg-gray-200 text-black relative"
+                                : "text-black"
                             }`}
                         >
                             {activeStep === step && (

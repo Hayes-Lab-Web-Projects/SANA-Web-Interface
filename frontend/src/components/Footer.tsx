@@ -34,10 +34,10 @@ function Footer() {
                             <Link
                                 to="https://github.com/waynebhayes/SANA"
                                 className="inline-flex items-center hover:text-hover-link transition"
-                                aria-label="GitHub Repository"
+                                aria-label="SANA Repository"
                             >
                                 <FaGithub size={24} />
-                                <span className="ml-2">SANA</span>
+                                <span className="ml-2">SANA Repository</span>
                             </Link>
                         </div>
                     </div>

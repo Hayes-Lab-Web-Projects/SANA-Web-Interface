@@ -48,7 +48,8 @@ const sanitizeShellInput = (input: any): string => {
 };
 
 const jobWorker = async (jobId: string, jobData: JobData) => {
-
+        console.log("starting new job: ", jobId);
+        console.log("job data: ", jobData);
         // Sanitize inputs
         const safeJobId = sanitizeShellInput(jobId);
         const safeJobData = {
@@ -61,6 +62,18 @@ const jobWorker = async (jobId: string, jobData: JobData) => {
         validateSanaVersion(jobData.modelVersion);
 
         const outputFile = path.resolve(`${jobData.jobLocation}`, 'sana_runtime.log');
+        const file1 = path.resolve(`${jobData.jobLocation}`, 'networks', safeJobData.network1Name, `${safeJobData.network1Name}.el`);
+        const file2 = path.resolve(`${jobData.jobLocation}`, 'networks', safeJobData.network2Name, `${safeJobData.network2Name}.el`);
+        console.log("file1: ", file1);
+        console.log("file2: ", file2);
+        if (!fs.existsSync(file1)) {
+            throw new Error(`Input file not found: ${file1}`);
+        }
+
+        if (!fs.existsSync(file2)) {
+            throw new Error(`Input file not found: ${file2}`);
+        }
+        console.log("files exist");
         const sanaLocation = SANA_LOCATIONS[jobData.modelVersion];
         
         let optionString = `cd "${jobData.jobLocation}" && "${sanaLocation}" `;
@@ -68,8 +81,10 @@ const jobWorker = async (jobId: string, jobData: JobData) => {
         console.log(`Executing command for job ${safeJobId}:`, optionString);
         
         if (jobData.extension === '.el') {
-            optionString += `-fg1 networks/${safeJobData.network1Name}/${safeJobData.network1Name}.el `;
-            optionString += `-fg2 networks/${safeJobData.network2Name}/${safeJobData.network2Name}.el `;
+            optionString += `-fg1 "${file1}" `;
+            optionString += `-fg2 "${file2}" `;
+            // optionString += `-fg1 ./networks/${safeJobData.network1Name}/${safeJobData.network1Name}.el `;
+            // optionString += `-fg2 ./networks/${safeJobData.network2Name}/${safeJobData.network2Name}.el `;
         } else {
             optionString += `-g1 ${safeJobData.network1Name} `;
             optionString += `-g2 ${safeJobData.network2Name} `;
@@ -125,9 +140,6 @@ const jobWorker = async (jobId: string, jobData: JobData) => {
                     if (fileDescriptor) {
                         fs.fdatasync(fileDescriptor, (err) => {
                             if (err) throw err;
-                            console.log('Data flushed to disk.');
-                
-                            // wstream.end(); // Close the stream after flushing
                         });
                     }
                         

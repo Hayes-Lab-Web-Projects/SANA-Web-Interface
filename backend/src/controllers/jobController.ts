@@ -178,6 +178,7 @@ const submitJobController = async (req: SubmitJobRequest, res: Response, next: N
         const response: UnifiedResponse<JobData> = {
             status: 'success',
             message: 'Job submitted successfully',
+            redirect: `/submit-job/${result.id}`,
             data: result,
         };
         // if (process.env.REDIRECT_AFTER_SUBMIT === 'true') {

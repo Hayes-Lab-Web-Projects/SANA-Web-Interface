@@ -63,8 +63,15 @@ const router: Router = Router();
 
 
 router.get('/:id/zip', downloadZipJob);
+// TODO: remove – temporary test middleware
+const logRequestMiddleware = (req: Request, _res: Response, next: NextFunction) => {
+    console.log('[preprocess]', req.method, req.url, 'Content-Type:', req.headers['content-type'], 'body keys:', Object.keys(req.body || {}));
+    next();
+};
+
 router.post(
     '/preprocess',
+    logRequestMiddleware,
     uploadMiddleware,
     validateAllFilesMiddleware,
     submitJobController,

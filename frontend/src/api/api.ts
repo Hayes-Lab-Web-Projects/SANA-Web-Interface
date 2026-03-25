@@ -40,7 +40,8 @@ const apiRequest = async <T extends object>(
 
     const data = await response.json();
     // console.log("response: ", response);
-    // console.log("data: ", data);
+    console.log("api response data: ", data);
+    console.log("schema: ", schema);
     
     // if (!response.ok)
     if (response.status != 302 && (response.status < 200 || response.status >= 300)) {
@@ -59,19 +60,19 @@ const apiRequest = async <T extends object>(
         );
       }
     }
-    
+    return data;
     // Validate successful response against the provided schema
-    const result = schema.safeParse(data);
-    if (result.success) {
-      return result.data;
-    } else {
-      console.error("API response validation failed:", result.error);
-      throw new ApiError(
-        "Invalid response format",
-        response.status,
-        { message: "Response validation failed", errors: result.error.format() }
-      );
-    }
+    // const result = schema.safeParse(data);
+    // if (result.success) {
+    //   return result.data;
+    // } else {
+    //   console.error("API response validation failed:", result.error);
+    //   throw new ApiError(
+    //     "Invalid response format",
+    //     response.status,
+    //     { message: "Response validation failed", errors: result.error.format() }
+    //   );
+    // }
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

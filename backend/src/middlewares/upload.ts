@@ -278,8 +278,11 @@ const validateSimilarityFileMiddleware = async (
 
 const validateAllFilesMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+        console.log("validating files middleware");
         await validateFilesMiddleware(req);
+        console.log("validating similarity file middleware");
         await validateSimilarityFileMiddleware(req);
+        console.log("all files validated");
         next();
     } catch (error) {
         cleanupFiles(req.files);
